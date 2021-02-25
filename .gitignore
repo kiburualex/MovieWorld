@@ -1,0 +1,32 @@
+# Compiled Python modules
+*.pyo
+*.pyc
+
+# SQLite
+*.db
+*.s3db
+*.sqlite3
+
+# Emacs save files
+*~
+\#*
+.\#*
+
+# Vim n co
+*.swp
+
+# cached files
+*/__pycache__/*
+
+# migrations files
+*/migrations/*
+!*/migrations/__init__py
+
+# vscode ide
+.vscode
+
+# logs
+*.log
+
+#media
+media/
