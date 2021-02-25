@@ -15,13 +15,13 @@ class ModelTestCase(TestCase):
         """Define the test client and other test variables."""
         self.movie_title = "Code Writer"
         self.movie_description = "Write world class code"
-        self.movie = movie(name=self.movie_title)
+        self.movie = Movie(title=self.movie_title, description=self.movie_description)
 
     def test_model_can_create_a_movie(self):
         """Test the movie model can create a movie."""
-        old_count = movie.objects.count()
+        old_count = Movie.objects.count()
         self.movie.save()
-        new_count = movie.objects.count()
+        new_count = Movie.objects.count()
         self.assertNotEqual(old_count, new_count)
 
 
@@ -40,7 +40,7 @@ class ViewTestCase(TestCase):
             
         # login to the jwt with created user details
         auth_url = reverse('jwt-auth')
-        resp = self.client.post(auth_url, {'email':'testuser@example.com', 'password':'$helter123*'}, format='json')
+        resp = self.client.post(auth_url, {'email':'admin@example.com', 'password':'$helter123*'}, format='json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
         self.assertTrue('token' in resp.data)
