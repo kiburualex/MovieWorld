@@ -37,16 +37,31 @@ class ListAPIView(generics.ListAPIView):
         date_from = self.request.GET.get('date_from')
         date_to = self.request.GET.get('date_to')
         query = self.request.GET.get('query')
+        watched = self.request.GET.get('watched')
+        type = self.request.GET.get('type')
         
         queryset_list = Table.objects.all()
-
+        """ Add display size incase of pagination """
         if display_size:
             pagination.PageNumberPagination.page_size = display_size
         else:
             pagination.PageNumberPagination.page_size = 10
 
+        """ Filter by date created. """
         if date_from and date_to:
             queryset_list = queryset_list.filter(created_at__range=(date_from, date_to))
+
+        
+        """ filter by watched flag i.e (all, watched, and unwatched)"""
+        if watched: 
+            if watched.lower() == 'watched':
+                queryset_list = queryset_list.filter(is_watched=True)
+            elif watched.lower() == 'unwatched':
+                 queryset_list = queryset_list.filter(is_watched=False)
+
+        """ filter by type which is either movie or series """
+        if type:
+            queryset_list = queryset_list.filter(Q(title__icontains=type.lower()))
 
         if query:
             queryset_list = queryset_list.filter(
@@ -67,7 +82,7 @@ class UpdateAPIView(generics.UpdateAPIView):
     def perform_update(self, serializer):
         try:
             instance = serializer.save()
-            update_info = f"Update Poll id={instance.id} details [{instance}]"
+            update_info = f"Update Movie id={instance.id} details [{instance}]"
         except Exception as e:
             logger.error('Error in Trail', error=e)
 

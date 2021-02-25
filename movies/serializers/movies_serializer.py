@@ -15,6 +15,10 @@ class ListSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'title',
                   'description',
+                  'type',
+                  'recommendation',
+                  'rating',
+                  'is_watched',
                   'created_at',
                   'updated_at',
                   'update_url',
@@ -28,7 +32,11 @@ class CreateSerializer(serializers.ModelSerializer):
         model = Table
         fields = ('id',
                   'title',
-                  'description'
+                  'description',
+                  'type',
+                  'recommendation',
+                  'rating',
+                  'is_watched'
                  )
 
     def validate_title(self, value):
@@ -43,6 +51,12 @@ class CreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Description cannot be null")
         return value
 
+    def validate_type(self, value):
+        """validate description not to empty."""
+        if not value:
+            raise serializers.ValidationError("Type cannot be null. Add either movie or series")
+        return value
+
 
 class UpdateSerializer(serializers.ModelSerializer):
     update_url = serializers.HyperlinkedIdentityField(view_name='movies:update')
@@ -54,6 +68,10 @@ class UpdateSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'title',
                   'description',
+                  'type',
+                  'recommendation',
+                  'rating',
+                  'is_watched',
                   'created_at',
                   'updated_at',
                   'update_url',
