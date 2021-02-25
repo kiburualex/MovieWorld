@@ -52,4 +52,13 @@
 #### **Run Tests**
   ```
   $ docker-compose run web python manage.py test
+```
+  ## Installation Using Docker
+  #### **Swagger Api Url**
+ ```
+  http://127.0.0.1:8000/
+  ```
+   #### **Health Check Url**
+ ```
+  http://127.0.0.1:8000/ht/
   ```
