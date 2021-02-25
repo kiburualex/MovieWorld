@@ -14,8 +14,9 @@ class Movie(BaseModel):
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     recomendation = models.CharField(max_length=200, null=True, blank=True)
-    recomendation = models.CharField(max_length=200, null=True, blank=True)
-    show_on_mobile = models.BooleanField(default=True)
+    rating = models.CharField(max_length=200, null=True, blank=True) # 1-5
+    view_type = models.CharField(max_length=200, null=True, blank=True) # movie or series
+    is_watched = models.BooleanField(default=True)
 
     def __str__(self):
         return f"id={self.id}, title={self.title}"
