@@ -13,5 +13,5 @@ urlpatterns = [
     # ex: /movies/update/5/
     path('update/<int:pk>/', UpdateAPIView.as_view(), name='update'),
     # ex: /movies/delete/5/
-    path('delete/<int:pk>/', DestroyAPIView.as_view(), name='delete')
+    path('delete/<int:pk>/', DestroyAPIView.as_view(), name='delete'),
 ]

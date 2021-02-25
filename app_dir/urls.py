@@ -45,7 +45,8 @@ urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     # -- A ReDoc view of your API specification at /redoc/
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
+    
+    re_path(r'^ht/', include('health_check.urls')),
     # path('admin/', admin.site.urls),
     path('api/token/', obtain_jwt_token, name='jwt-auth'),
     path('api/refresh/', refresh_jwt_token, name='jwt-auth-refresh'),

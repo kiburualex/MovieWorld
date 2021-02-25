@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     #installed
     'rest_framework',
     'drf_yasg',
+    'health_check', # required
+    'health_check.db', # stock Django health checkers
+    'health_check.cache',
+    'health_check.storage',
     #local
     'users.apps.UsersConfig',
     'movies.apps.MoviesConfig'
@@ -282,3 +286,11 @@ structlog.configure(
     cache_logger_on_first_use=True,
     )
 # ----------- structlog logging ----------------
+
+
+# ----------- django health check ----------------
+HEALTH_CHECK = {
+    'DISK_USAGE_MAX': 90,  # percent
+    'MEMORY_MIN': 100,    # in MB
+}
+# ----------- django health check ----------------
