@@ -28,7 +28,7 @@ class ListSerializer(serializers.ModelSerializer):
 
 class CreateSerializer(serializers.ModelSerializer):
     class Meta:
-        ref_name = "movies Create"
+        ref_name = "Movies Create"
         model = Table
         fields = ('id',
                   'title',
