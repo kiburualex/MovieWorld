@@ -18,4 +18,4 @@ class Movie(BaseModel):
     is_watched = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"id={self.id}, title={self.title}"
+        return f"id={self.id}, title={self.title}, description={self.description}"

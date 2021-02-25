@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 from .models import Movie
 
@@ -32,57 +33,70 @@ class ViewTestCase(TestCase):
 
     def setUp(self):
         """Define the test client and other test variables."""
-        self.client = APIClient()
         # create sample user
         user = get_user_model().objects.create_user(name='testuser', email='testuser@example.com', password='$helter123*')
         user.is_active = False
         user.save()
-            
-        # login to the jwt with created user details
-        auth_url = reverse('jwt-auth')
-        resp = self.client.post(auth_url, {'email':'admin@example.com', 'password':'$helter123*'}, format='json')
+
+        # enforce login using created user credentials
+        user = get_user_model().objects.get(email='testuser@example.com')
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+        users_url = reverse('users:list')
+        resp = self.client.get(users_url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-        self.assertTrue('token' in resp.data)
-        self.token = resp.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION='JWT {0}'.format(token))
-
-        # self.client.login(username='admin@example.com', password='$helter123*')
-        self.movie_data = {'title': 'Go to Ibiza', description:'Once upon a time'}
+        self.movie_data = {'title': 'Go to Ibiza', 'description':'Once upon a time'}
         self.response = self.client.post(
             reverse('movies:create'),
             self.movie_data,
             format="json")
 
+        self.movie = Movie.objects.all().last()
+
     def test_api_can_create_a_movie(self):
         """Test the api has bucket creation capability."""
         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
+    def test_api_can_get_movie(self):
+        """Test the api can get movies."""
+        response = self.client.get(
+            reverse('movies:list'),
+            format='json',
+            follow=True)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+
     def test_api_can_get_a_movie(self):
         """Test the api can get a given movie."""
-        movie = movie.objects.all().last()
+        movie = Movie.objects.create(title='Test Movie', description='Awesome movie')
+        movie.save()
+
         response = self.client.get(
-            reverse('movies:details',
+            reverse('movies:detail',
             kwargs={'pk': movie.id}), format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, movie)
+        self.assertContains(response, movie.title)
 
     def test_api_can_update_movie(self):
         """Test the api can update a given movie."""
         change_movie = {'title': 'Something new'}
-        movie = movie.objects.all().last()
         res = self.client.put(
-            reverse('movies:details', kwargs={'pk': movie.id}),
+            reverse('movies:update', kwargs={'pk': self.movie.id}),
             change_movie, format='json'
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+
+
     def test_api_can_delete_movie(self):
         """Test the api can delete a movie."""
-        movie = movie.objects.all().last()
+        movie = Movie.objects.create(title='Test Movie', description='Awesome movie')
+        movie.save()
         response = self.client.delete(
-            reverse('movies:details', kwargs={'pk': movie.id}),
+            reverse('movies:delete', kwargs={'pk': movie.id}),
             format='json',
             follow=True)
 
